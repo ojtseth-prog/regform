@@ -16,12 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $db_host = "localhost";
-$db_user = "u826896242_registration";
-$db_password = "iMPACTPROTECH@2023";
-$db_name = "u826896242_registration";
+$db_user = "u826896242_new_dbcallify";    
+$db_password = "iMPACTPROTECH@2023"; 
+$db_name = "u826896242_new_dbcallify";
 
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
 
 if ($conn->connect_error) {
     http_response_code(500);
@@ -35,7 +34,18 @@ $data = json_decode($json, true);
 $pharmacy_name = $data['pharmacy_name'] ?? '';
 $address = $data['address'] ?? '';
 $contact_number = $data['contact_number'] ?? '';
+$contact_person = $data['contact_person'] ?? '';
 $email_address = $data['email_address'] ?? '';
+
+// Format contact number to US format (000)-000-0000
+$contact_number_cleaned = preg_replace('/\D/', '', $contact_number);
+if (strlen($contact_number_cleaned) === 10) {
+    $contact_number = sprintf("(%s)-%s-%s",
+        substr($contact_number_cleaned, 0, 3),
+        substr($contact_number_cleaned, 3, 3),
+        substr($contact_number_cleaned, 6, 4)
+    );
+}
 
 if (empty($pharmacy_name) || empty($address) || empty($contact_number) || empty($email_address)) {
     http_response_code(400);
@@ -43,7 +53,14 @@ if (empty($pharmacy_name) || empty($address) || empty($contact_number) || empty(
     exit();
 }
 
-$stmt = $conn->prepare("INSERT INTO registration (pharmacy_name, address, contact_number, email_address) VALUES (?, ?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO registration (pharmacy_name, address, contact_number, email_address, `timestamp`) VALUES (?, ?, ?, ?, NOW())");
+
+if (!$stmt) {
+    http_response_code(500);
+    echo json_encode(["error" => "Query preparation failed: " . $conn->error]);
+    exit();
+}
+
 $stmt->bind_param("ssss", $pharmacy_name, $address, $contact_number, $email_address);
 
 if ($stmt->execute()) {

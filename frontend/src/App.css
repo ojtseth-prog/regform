@@ -58,8 +58,6 @@ body {
   letter-spacing: 0.3px;
 }
 
-
-
 .top-bar .container {
   display: flex;
   justify-content: space-between;
@@ -89,8 +87,6 @@ body {
   padding: 10px 0;
   box-shadow: var(--shadow-lg);
 }
-
-
 
 .main-nav .container {
   display: flex;
@@ -138,8 +134,6 @@ body {
   transform: scale(1.05);
 }
 
-
-
 .nav-links {
   display: flex;
   list-style: none;
@@ -159,8 +153,6 @@ body {
   color: var(--primary-blue);
 }
 
-
-
 .login-btn {
   background-color: var(--primary-blue);
   color: var(--white) !important;
@@ -177,8 +169,6 @@ body {
   box-shadow: 0 6px 16px rgba(30, 64, 175, 0.35);
 }
 
-
-
 /* Hamburger Menu */
 .mobile-menu-btn {
   display: none;
@@ -188,8 +178,6 @@ body {
   cursor: pointer;
   color: var(--primary-blue);
 }
-
-
 
 /* Hero & Form Section */
 .hero-section {
@@ -542,6 +530,7 @@ body {
     opacity: 0;
     transform: translateY(30px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -623,8 +612,13 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Footer Refinement */
@@ -692,8 +686,51 @@ body {
   font-weight: 500;
 }
 
+/* Close/X Button Styles */
+.close-form-btn {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
 
-/* Responsiveness */
+.close-form-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #e74c3c;
+  transform: scale(1.05);
+}
+
+.close-form-btn:active {
+  transform: scale(0.95);
+}
+
+/* Make sure form-card has position relative for absolute positioning of close button */
+.form-card {
+  position: relative;
+}
+
+.form-group.full {
+  width: 100%;
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+/* ============================================ */
+/* ENHANCED MOBILE RESPONSIVENESS */
+/* ============================================ */
+
+/* Tablet Styles (768px - 1024px) */
 @media (max-width: 1024px) {
   .hero-section .container {
     flex-direction: column;
@@ -719,70 +756,302 @@ body {
   }
 }
 
+/* Mobile Styles (up to 768px) */
 @media (max-width: 768px) {
+
+  /* Hide top bar on mobile */
   .top-bar {
     display: none;
   }
 
+  /* Mobile Navigation */
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+
+  .mobile-menu-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
   .nav-links {
     display: none;
-    /* Will be replaced by mobile drawer in JS */
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: var(--shadow-lg);
+    z-index: 999;
+    border-radius: 0 0 20px 20px;
   }
 
   .nav-links.active {
     display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 70px;
-    left: 0;
-    width: 100%;
-    background: white;
-    padding: 20px;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
   }
 
-  .nav-links.active li {
-    margin: 15px 0;
+  .nav-links li {
+    margin: 12px 0;
+    padding: 10px;
+    text-align: center;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s;
   }
 
-  .mobile-menu-btn {
-    display: block;
+  .nav-links li:hover {
+    background: var(--bg-light);
   }
 
-  .hero-section {
-    padding: 60px 0;
-    min-height: auto;
+  .login-btn {
+    margin-left: 0 !important;
+    text-align: center;
+    background-color: var(--primary-blue);
+    color: var(--white) !important;
   }
 
-  .hero-content h1 {
-    font-size: 32px;
-  }
-}
-
-@media (max-width: 480px) {
-  .form-card {
-    padding: 24px;
-    border-radius: 0;
-    box-shadow: none;
-    border: none;
-    background: transparent;
+  /* Logo adjustments */
+  .logo-img {
+    height: 40px;
   }
 
   .brand-name {
     font-size: 20px;
   }
+
   .brand-sub {
     font-size: 9px;
+    letter-spacing: 2px;
   }
+
+  /* Hero section */
+  .hero-section {
+    padding: 40px 0;
+    min-height: auto;
+    background-attachment: scroll;
+  }
+
+  .hero-section .container {
+    padding: 0 16px;
+  }
+
+  /* Form Card */
+  .form-card {
+    padding: 28px 20px;
+    margin: 20px 0;
+    border-radius: var(--radius-md);
+  }
+
+  .form-card h2 {
+    font-size: 24px;
+  }
+
+  .form-card .subtitle {
+    font-size: 14px;
+  }
+
+  /* Form rows stack on mobile */
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-group.half {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .form-group input,
+  .input-wrapper select {
+    padding: 14px 16px 14px 44px;
+    font-size: 16px;
+  }
+
+  .input-icon {
+    left: 14px;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    padding: 16px;
+    font-size: 15px;
+  }
+
+  /* Close button */
+  .close-form-btn {
+    top: 12px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Success page */
+  .success-card.simplified {
+    padding: 40px 24px;
+    margin: 20px;
+  }
+
+  .success-icon-wrap.large {
+    width: 70px;
+    height: 70px;
+  }
+
+  .success-icon-wrap.large svg {
+    width: 35px;
+    height: 35px;
+  }
+
+  .success-card.simplified .confirmation-message p {
+    font-size: 18px;
+  }
+
+  .redirect-status p {
+    font-size: 14px;
+  }
+
+  /* Hero stats */
+  .hero-stats {
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat-value {
+    font-size: 28px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+}
+
+/* Small Phones (up to 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .form-card {
+    padding: 20px 16px;
+    box-shadow: var(--shadow-md);
+    background: var(--white);
+  }
+
+  .form-card h2 {
+    font-size: 22px;
+  }
+
+  .form-card .subtitle {
+    font-size: 13px;
+  }
+
+  .form-group label {
+    font-size: 14px;
+  }
+
+  .form-group input,
+  .input-wrapper select {
+    padding: 12px 12px 12px 40px;
+    font-size: 14px;
+  }
+
+  .input-icon {
+    left: 12px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .submit-btn {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .status-message {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  .brand-name {
+    font-size: 18px;
+  }
+
+  .brand-sub {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+  }
+
+  .logo-img {
+    height: 35px;
+  }
+
   .logo {
     gap: 10px;
   }
 
-  .hero-stats {
-    gap: 20px;
+  .hero-section {
+    padding: 30px 0;
   }
 
-  .stat-value {
-    font-size: 24px;
+  .success-card.simplified {
+    padding: 30px 20px;
+  }
+
+  .success-card.simplified .confirmation-message p {
+    font-size: 16px;
+  }
+}
+
+/* Landscape mode for phones */
+@media (max-width: 768px) and (orientation: landscape) {
+  .hero-section {
+    padding: 20px 0;
+  }
+
+  .form-card {
+    padding: 20px;
+  }
+
+  .form-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .form-group.half {
+    width: calc(50% - 12px);
+  }
+}
+
+/* Tablet landscape */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+  .form-card {
+    max-width: 550px;
+  }
+
+  .hero-section .container {
+    flex-direction: row;
+    gap: 30px;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+
+  .form-card {
+    max-width: 700px;
+  }
+
+  .hero-content h1 {
+    font-size: 60px;
   }
 }

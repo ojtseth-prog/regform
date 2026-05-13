@@ -15,6 +15,9 @@ const Icons = {
   Email: () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>
   ),
+  User: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+  ),
   Check: () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
   ),
@@ -23,6 +26,9 @@ const Icons = {
   ),
   Menu: () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
+  ),
+  Close: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
   )
 };
 
@@ -32,6 +38,7 @@ function App() {
     address: "",
     contact_number: "",
     email_address: "",
+    contact_person: "",
   });
 
   const [message, setMessage] = useState("");
@@ -76,8 +83,22 @@ function App() {
     };
   }, []);
 
+  // Only allow digits, no formatting while typing
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === "contact_number") {
+      // Only allow digits, max 10 characters
+      const digitsOnly = value.replace(/\D/g, '').slice(0, 10);
+      setFormData({ ...formData, [name]: digitsOnly });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  // Get clean phone number (just digits, or empty if none)
+  const getCleanPhoneNumber = () => {
+    return formData.contact_number.replace(/\D/g, '');
   };
 
   const handleSubmit = async (e) => {
@@ -86,16 +107,50 @@ function App() {
     setMessage("");
     setIsError(false);
 
+    const cleanPhone = getCleanPhoneNumber();
+
+    // Phone is OPTIONAL - only validate if provided
+    if (cleanPhone && cleanPhone.length !== 10) {
+      setIsError(true);
+      setMessage("Please enter a valid 10-digit phone number or leave it blank");
+      setLoading(false);
+      return;
+    }
+
+    // Email is still required
+    if (!formData.email_address) {
+      setIsError(true);
+      setMessage("Email address is required");
+      setLoading(false);
+      return;
+    }
+
+    // Prepare data - send raw digits (backend will format for storage)
+    const submitData = {
+      pharmacy_name: formData.pharmacy_name,
+      address: formData.address,
+      contact_person: formData.contact_person,
+      contact_number: cleanPhone, // Send raw digits (or empty string)
+      email_address: formData.email_address,
+    };
+
     try {
       const API_URL = "https://corerxinfo.impactprotech.host/api/register.php";
 
-      await axios.post(API_URL, formData);
+      await axios.post(API_URL, submitData);
       setCurrentView("success");
       window.location.hash = "success";
-      setFormData({ pharmacy_name: "", address: "", contact_number: "", email_address: "" });
+      setFormData({
+        pharmacy_name: "",
+        address: "",
+        contact_number: "",
+        email_address: "",
+        contact_person: "",
+      });
     } catch (error) {
       setIsError(true);
-      setMessage(error.response?.data?.error || "Connection failed.");
+      console.error("API Error:", error.response || error);
+      setMessage(error.response?.data?.error || "Connection failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -103,6 +158,15 @@ function App() {
 
   const handleBackToHome = () => {
     window.location.href = "https://corerxreturns.com/";
+  };
+
+  const handleCloseForm = () => {
+    handleBackToHome();
+  };
+
+  // Navigation handlers
+  const handleNavigation = (path) => {
+    window.location.href = path;
   };
 
   return (
@@ -123,7 +187,7 @@ function App() {
       {/* Main Navigation */}
       <nav className={`main-nav ${scrolled ? "scrolled" : ""}`}>
         <div className="container">
-          <a href="/" onClick={(e) => { e.preventDefault(); window.location.hash = ""; }} className="logo">
+          <a href="https://corerxreturns.com/" className="logo">
             <img src="/logo.jpg" alt="CoreRx Returns Logo" className="logo-img" />
             <div className="logo-text">
               <span className="brand-name">CoreRx</span>
@@ -140,11 +204,24 @@ function App() {
           </button>
 
           <ul className={`nav-links ${isMenuOpen ? "active" : ""}`}>
-            <li onClick={() => window.location.hash = ""}>Home</li>
-            <li>About Us</li>
-            <li>Services</li>
-            <li>Contact Us</li>
-            <li className="login-btn">Login →</li>
+            <li onClick={() => handleNavigation("https://corerxreturns.com/")}>
+              Home
+            </li>
+            <li onClick={() => handleNavigation("https://corerxreturns.com/about")}>
+              About Us
+            </li>
+            <li onClick={() => handleNavigation("https://corerxreturns.com/services")}>
+              Services
+            </li>
+            <li onClick={() => handleNavigation("https://corerxreturns.com/contact-us")}>
+              Contact Us
+            </li>
+            <li
+              className="login-btn"
+              onClick={() => handleNavigation("https://coremedsweeprx.impactprotech.host/")}
+            >
+              Login →
+            </li>
           </ul>
         </div>
       </nav>
@@ -154,20 +231,28 @@ function App() {
         <div className="container">
           {currentView === "form" ? (
             <div className="form-card">
+              <button
+                className="close-form-btn"
+                onClick={handleCloseForm}
+                aria-label="Close form and return to home"
+              >
+                <Icons.Close />
+              </button>
+
               <h2 className="animate-in" style={{ animationDelay: "0.1s" }}>Pharmacy Registration</h2>
               <p className="subtitle animate-in" style={{ animationDelay: "0.2s" }}>Fill out the details below to get started</p>
 
               <form onSubmit={handleSubmit}>
                 <div className="form-row animate-in" style={{ animationDelay: "0.5s" }}>
                   <div className="form-group half">
-                    <label htmlFor="pharmacy_name">Pharmacy Name</label>
+                    <label htmlFor="pharmacy_name">Enter your Pharmacy Name</label>
                     <div className="input-wrapper">
                       <span className="input-icon"><Icons.Pharmacy /></span>
                       <input
                         type="text"
                         id="pharmacy_name"
                         name="pharmacy_name"
-                        placeholder="e.g. Clarkson Pharmacy"
+                        placeholder="ex. My Pharmacy"
                         value={formData.pharmacy_name}
                         onChange={handleChange}
                         required
@@ -176,14 +261,14 @@ function App() {
                   </div>
 
                   <div className="form-group half">
-                    <label htmlFor="address">Business Address</label>
+                    <label htmlFor="address">Enter your Business Address</label>
                     <div className="input-wrapper">
                       <span className="input-icon"><Icons.Location /></span>
                       <input
                         type="text"
                         id="address"
                         name="address"
-                        placeholder="Street, City, Zip Code"
+                        placeholder="ex. 123 Main St, Boston, MA 02108"
                         value={formData.address}
                         onChange={handleChange}
                         required
@@ -194,15 +279,15 @@ function App() {
 
                 <div className="form-row animate-in" style={{ animationDelay: "0.6s" }}>
                   <div className="form-group half">
-                    <label htmlFor="contact_number">Contact Phone</label>
+                    <label htmlFor="contact_person">Contact Person</label>
                     <div className="input-wrapper">
-                      <span className="input-icon"><Icons.Phone /></span>
+                      <span className="input-icon"><Icons.User /></span>
                       <input
-                        type="tel"
-                        id="contact_number"
-                        name="contact_number"
-                        placeholder="(555) 000-0000"
-                        value={formData.contact_number}
+                        type="text"
+                        id="contact_person"
+                        name="contact_person"
+                        placeholder="Please indicate the full name"
+                        value={formData.contact_person}
                         onChange={handleChange}
                         required
                       />
@@ -210,14 +295,32 @@ function App() {
                   </div>
 
                   <div className="form-group half">
-                    <label htmlFor="email_address">Email Address</label>
+                    <label htmlFor="contact_number">Contact Phone (Optional)</label>
+                    <div className="input-wrapper">
+                      <span className="input-icon"><Icons.Phone /></span>
+                      <input
+                        type="tel"
+                        id="contact_number"
+                        name="contact_number"
+                        placeholder="ex. 1234567890"
+                        value={formData.contact_number}
+                        onChange={handleChange}
+                        maxLength={10}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-row animate-in" style={{ animationDelay: "0.7s" }}>
+                  <div className="form-group full">
+                    <label htmlFor="email_address">Enter your Email Address</label>
                     <div className="input-wrapper">
                       <span className="input-icon"><Icons.Email /></span>
                       <input
                         type="email"
                         id="email_address"
                         name="email_address"
-                        placeholder="pharmacy@example.com"
+                        placeholder="ex. pharmacy@gmail.com"
                         value={formData.email_address}
                         onChange={handleChange}
                         required
@@ -229,7 +332,7 @@ function App() {
                 <button
                   type="submit"
                   className={`submit-btn ${loading ? "processing" : ""} animate-in`}
-                  style={{ animationDelay: "0.7s" }}
+                  style={{ animationDelay: "0.8s" }}
                   disabled={loading}
                 >
                   {loading ? "Processing..." : "Submit Registration"}
