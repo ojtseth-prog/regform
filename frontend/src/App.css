@@ -258,7 +258,7 @@ body {
 /* Form Container */
 .form-card {
   flex: 1;
-  max-width: 650px;
+  max-width: 850px;
   background-color: var(--white);
   padding: clamp(30px, 5vh, 50px);
   border-radius: var(--radius-lg);
@@ -339,13 +339,19 @@ body {
 
 .form-row {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   margin-bottom: 0px;
+}
+.form-group.third {
+  flex: 1;
+  min-width: 0; /* Prevents overflow in flexbox */
 }
 
 .form-group.half {
   flex: 1;
 }
+
+
 
 .input-wrapper select {
   width: 100%;
@@ -1054,4 +1060,63 @@ body {
   .hero-content h1 {
     font-size: 60px;
   }
+}
+
+@media (max-width: 850px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-group.third, .form-group.half {
+    width: 100%;
+  }
+}
+
+.sigCanvas {
+  display: block;
+  cursor: crosshair;
+  /* Ensure the canvas doesn't stretch via CSS */
+  max-width: 100%;
+}
+
+.file-input {
+  padding: 8px !important;
+  font-size: 13px !important;
+  background: #f8fafc !important;
+}
+
+/* Signature Styling */
+.signature-container {
+  width: 100%;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  /* Prevent scrolling while drawing on mobile */
+  touch-action: none; 
+}
+
+.clear-sig-btn {
+  margin-top: 8px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-sig-btn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #fecaca;
+}
+
+/* Adjust Icons for 3-column rows (shorter padding) */
+.form-group.third input {
+  padding: 12px 12px 12px 38px;
 }
