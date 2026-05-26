@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./App.css";
 import SignatureCanvas from "react-signature-canvas";
- 
+
 
 const Icons = {
   Pharmacy: () => (
@@ -35,7 +35,7 @@ const Icons = {
 };
 
 function App() {
-const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     pharmacy_name: "",
     dba_name: "",
     address: "",
@@ -48,15 +48,15 @@ const [formData, setFormData] = useState({
     contact_person: "",
     drug_wholesaler: "",
     authorized_name: "",
-});
+  });
 
-const [files, setFiles] = useState({
+  const [files, setFiles] = useState({
     state_lic_file: null,
     dea_lic_file: null,
     invoice_file: null
-});
+  });
 
-const [sigPad, setSigPad] = useState(null);
+  const [sigPad, setSigPad] = useState(null);
   const sigContainerRef = useRef(null); // Add this ref
   const [canvasWidth, setSigWidth] = useState(500);
 
@@ -67,6 +67,32 @@ const [sigPad, setSigPad] = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const [currentView, setCurrentView] = useState("form");
   const [countdown, setCountdown] = useState(5);
+
+  const formatUSPhoneNumber = (value) => {
+    const digits = value.replace(/\D/g, ""); // Remove all non-digits
+    if (digits.length === 0) return "";
+
+    // Ensure the number starts with '1'
+    let num = digits;
+    if (num[0] !== "1") {
+      num = "1" + num;
+    }
+
+    // Limit to 11 digits (1 + 10 digit number)
+    num = num.substring(0, 11);
+
+    const parts = {
+      country: num.slice(0, 1),
+      area: num.slice(1, 4),
+      mid: num.slice(4, 7),
+      last: num.slice(7, 11)
+    };
+
+    if (num.length <= 1) return parts.country;
+    if (num.length <= 4) return `${parts.country} (${parts.area}`;
+    if (num.length <= 7) return `${parts.country} (${parts.area}) ${parts.mid}`;
+    return `${parts.country} (${parts.area}) ${parts.mid}-${parts.last}`;
+  };
 
   useEffect(() => {
     let timer;
@@ -84,7 +110,7 @@ const [sigPad, setSigPad] = useState(null);
     return () => clearInterval(timer);
   }, [currentView, countdown]);
 
-    useEffect(() => {
+  useEffect(() => {
     const updateWidth = () => {
       if (sigContainerRef.current) {
         // Get the actual width of the container minus a little padding
@@ -119,10 +145,9 @@ const [sigPad, setSigPad] = useState(null);
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "contact_number") {
-      // Only allow digits, max 10 characters
-      const digitsOnly = value.replace(/\D/g, '').slice(0, 14);
-      setFormData({ ...formData, [name]: digitsOnly });
+    if (name === "contact_number" || name === "mobile") {
+      // Apply US formatting
+      setFormData({ ...formData, [name]: formatUSPhoneNumber(value) });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -133,17 +158,28 @@ const [sigPad, setSigPad] = useState(null);
     return formData.contact_number.replace(/\D/g, '');
   };
 
- const handleFileChange = (e) => {
+  const handleFileChange = (e) => {
     const { name, files: uploadedFiles } = e.target;
     setFiles({ ...files, [name]: uploadedFiles[0] });
   };
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Change 1: Safer check for the signature pad
     if (!sigPad || sigPad.isEmpty()) {
-        alert("Please provide a signature");
+      alert("Please provide a signature");
+      return;
+    }
+
+    if (!files.state_lic_file || !files.dea_lic_file) {
+      alert("Please upload both State and DEA licenses.");
+      return;
+    }
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email_address)) {
+        alert("Please enter a complete email address (e.g., name@example.com)");
         return;
     }
 
@@ -153,32 +189,32 @@ const handleSubmit = async (e) => {
 
     const data = new FormData();
     Object.keys(formData).forEach(key => {
-        data.append(key, formData[key] || ""); 
+      data.append(key, formData[key] || "");
     });
 
     // Change 2: Use getCanvas() instead of getTrimmedCanvas() to avoid the TypeError
     // This gets the signature exactly as drawn on the pad
     const signatureImage = sigPad.getCanvas().toDataURL('image/png');
-    data.append("signature_image", signatureImage); 
+    data.append("signature_image", signatureImage);
 
     if (files.state_lic_file) data.append("state_lic_file", files.state_lic_file);
     if (files.dea_lic_file) data.append("dea_lic_file", files.dea_lic_file);
 
     try {
-        const response = await axios.post("https://corerxinfo.impactprotech.host/api/register.php", data);
-        if (response.data && response.data.success) {
-            setCurrentView("success");
-        } else {
-            setIsError(true);
-            setMessage(response.data.error || "The server encountered an issue saving your data.");
-        }
-    } catch (error) {
+      const response = await axios.post("https://corerxinfo.impactprotech.host/api/register.php", data);
+      if (response.data && response.data.success) {
+        setCurrentView("success");
+      } else {
         setIsError(true);
-        setMessage(error.response?.data?.error || "Error connecting to server.");
+        setMessage(response.data.error || "The server encountered an issue saving your data.");
+      }
+    } catch (error) {
+      setIsError(true);
+      setMessage(error.response?.data?.error || "Error connecting to server.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   const handleBackToHome = () => {
     window.location.href = "https://corerxreturns.com/";
@@ -266,139 +302,147 @@ const handleSubmit = async (e) => {
               <h2 className="animate-in" style={{ animationDelay: "0.1s" }}>Pharmacy Registration</h2>
               <p className="subtitle animate-in" style={{ animationDelay: "0.2s" }}>Fill out the details below to get started</p>
 
-         <form onSubmit={handleSubmit}>
-  {/* Row 1: Pharmacy & DBA */}
-  <div className="form-row animate-in">
-    <div className="form-group half">
-      <label>Pharmacy Name *</label>
-      <div className="input-wrapper">
-        <span className="input-icon"><Icons.Pharmacy /></span>
-        <input type="text" name="pharmacy_name" value={formData.pharmacy_name} onChange={handleChange} required />
-      </div>
-    </div>
-    <div className="form-group half">
-      <label>DBA Name</label>
-      <div className="input-wrapper">
-        <span className="input-icon"><Icons.Pharmacy /></span>
-        <input type="text" name="dba_name" value={formData.dba_name} onChange={handleChange} />
-      </div>
-    </div>
+              <form onSubmit={handleSubmit}>
+                {/* Row 1: Pharmacy & DBA */}
+                <div className="form-row animate-in">
+                  <div className="form-group half">
+                    <label>Pharmacy Name *</label>
+                    <div className="input-wrapper">
+                      <span className="input-icon"><Icons.Pharmacy /></span>
+                      <input type="text" name="pharmacy_name" value={formData.pharmacy_name} onChange={handleChange} required />
+                    </div>
+                  </div>
+                  <div className="form-group half">
+                    <label>DBA Name</label>
+                    <div className="input-wrapper">
+                      <span className="input-icon"><Icons.Pharmacy /></span>
+                      <input type="text" name="dba_name" value={formData.dba_name} onChange={handleChange} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Row 2: Business Address */}
+                <div className="form-group full animate-in">
+                  <label>Business Address *</label>
+                  <div className="input-wrapper">
+                    <span className="input-icon"><Icons.Location /></span>
+                    <input type="text" name="address" value={formData.address} onChange={handleChange} required />
+                  </div>
+                </div>
+
+                {/* Row 3: City, State, Zip (3 Fields) */}
+                <div className="form-row animate-in">
+                  <div className="form-group third">
+                    <label>City *</label>
+                    <input type="text" name="city" value={formData.city} onChange={handleChange} required />
+                  </div>
+                  <div className="form-group third">
+                    <label>State *</label>
+                    <input type="text" name="state" value={formData.state} onChange={handleChange} required />
+                  </div>
+                  <div className="form-group third">
+                    <label>Zip Code *</label>
+                    <input type="text" name="zip_code" value={formData.zip_code} onChange={handleChange} required />
+                  </div>
+                </div>
+
+                {/* Row 4: Phone, Mobile, Email (3 Fields) */}
+                <div className="form-row animate-in">
+                  <div className="form-group third">
+                    <label>Phone Number *</label>
+                    <div className="input-wrapper">
+                      <span className="input-icon"><Icons.Phone /></span>
+                      <input type="tel" name="contact_number" value={formData.contact_number} onChange={handleChange} required />
+                    </div>
+                  </div>
+                  <div className="form-group third">
+                    <label>Mobile Number *</label>
+                    <div className="input-wrapper">
+                      <span className="input-icon"><Icons.Phone /></span>
+                      <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} required />
+                    </div>
+                  </div>
+<div className="form-group third">
+  <label>Email Address *</label>
+  <div className="input-wrapper">
+    <span className="input-icon"><Icons.Email /></span>
+    <input 
+      type="email" 
+      name="email_address" 
+      value={formData.email_address} 
+      onChange={handleChange} 
+      required 
+      placeholder="email@example.com"
+      title="Please enter a valid email address"
+    />
   </div>
+</div>
+                </div>
 
-  {/* Row 2: Business Address */}
-  <div className="form-group full animate-in">
-    <label>Business Address *</label>
-    <div className="input-wrapper">
-      <span className="input-icon"><Icons.Location /></span>
-      <input type="text" name="address" value={formData.address} onChange={handleChange} required />
-    </div>
-  </div>
+                {/* Row 5: Contact, Authorized, Wholesaler (3 Fields) */}
+                <div className="form-row animate-in">
+                  <div className="form-group third">
+                    <label>Contact Person *</label>
+                    <input type="text" name="contact_person" value={formData.contact_person} onChange={handleChange} required />
+                  </div>
+                  <div className="form-group third">
+                    <label>Authorized Name *</label>
+                    <input type="text" name="authorized_name" value={formData.authorized_name} onChange={handleChange} required />
+                  </div>
+                  <div className="form-group third">
+                    <label>Drug Wholesaler *</label>
+                    <input type="text" name="drug_wholesaler" value={formData.drug_wholesaler} onChange={handleChange} required />
+                  </div>
+                </div>
 
-  {/* Row 3: City, State, Zip (3 Fields) */}
-  <div className="form-row animate-in">
-    <div className="form-group third">
-      <label>City *</label>
-      <input type="text" name="city" value={formData.city} onChange={handleChange} required />
-    </div>
-    <div className="form-group third">
-      <label>State *</label>
-      <input type="text" name="state" value={formData.state} onChange={handleChange} required />
-    </div>
-    <div className="form-group third">
-      <label>Zip Code *</label>
-      <input type="text" name="zip_code" value={formData.zip_code} onChange={handleChange} required />
-    </div>
-  </div>
+                {/* Row 6: File Uploads */}
+                <div className="form-row animate-in">
+                  <div className="form-group half">
+                    <label>State Lic. Copy *</label>
+                    <input type="file" name="state_lic_file" onChange={handleFileChange} className="file-input" required />
+                  </div>
+                  <div className="form-group half">
+                    <label>DEA Lic. Copy *</label>
+                    <input type="file" name="dea_lic_file" onChange={handleFileChange} className="file-input" required />
+                  </div>
+                </div>
 
-  {/* Row 4: Phone, Mobile, Email (3 Fields) */}
-  <div className="form-row animate-in">
-    <div className="form-group third">
-      <label>Phone Number</label>
-      <div className="input-wrapper">
-        <span className="input-icon"><Icons.Phone /></span>
-        <input type="tel" name="contact_number" value={formData.contact_number} onChange={handleChange} />
-      </div>
-    </div>
-    <div className="form-group third">
-      <label>Mobile Number</label>
-      <div className="input-wrapper">
-        <span className="input-icon"><Icons.Phone /></span>
-        <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} />
-      </div>
-    </div>
-    <div className="form-group third">
-      <label>Email Address *</label>
-      <div className="input-wrapper">
-        <span className="input-icon"><Icons.Email /></span>
-        <input type="email" name="email_address" value={formData.email_address} onChange={handleChange} required />
-      </div>
-    </div>
-  </div>
+                {/* Row 7: Signature */}
+                <div className="form-group full animate-in">
+                  <label>Online Signature *</label>
+                  <div
+                    ref={sigContainerRef} // Attach the ref here
+                    className="signature-container"
+                  >
+                    <SignatureCanvas
+                      ref={(ref) => setSigPad(ref)}
+                      backgroundColor="white"
+                      penColor="black"
+                      // Use the dynamic canvasWidth here
+                      canvasProps={{
+                        width: canvasWidth,
+                        height: 180,
+                        className: 'sigCanvas'
+                      }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="clear-sig-btn"
+                    onClick={() => sigPad && sigPad.clear()}
+                  >
+                    Clear Signature
+                  </button>
+                </div>
 
-  {/* Row 5: Contact, Authorized, Wholesaler (3 Fields) */}
-  <div className="form-row animate-in">
-    <div className="form-group third">
-      <label>Contact Person *</label>
-      <input type="text" name="contact_person" value={formData.contact_person} onChange={handleChange} required />
-    </div>
-    <div className="form-group third">
-      <label>Authorized Name *</label>
-      <input type="text" name="authorized_name" value={formData.authorized_name} onChange={handleChange} required />
-    </div>
-    <div className="form-group third">
-      <label>Drug Wholesaler</label>
-      <input type="text" name="drug_wholesaler" value={formData.drug_wholesaler} onChange={handleChange} />
-    </div>
-  </div>
-
-  {/* Row 6: File Uploads */}
-  <div className="form-row animate-in">
-    <div className="form-group half">
-      <label>State Lic. Copy</label>
-      <input type="file" name="state_lic_file" onChange={handleFileChange} className="file-input" />
-    </div>
-    <div className="form-group half">
-      <label>DEA Lic. Copy</label>
-      <input type="file" name="dea_lic_file" onChange={handleFileChange} className="file-input" />
-    </div>
-  </div>
-
-  {/* Row 7: Signature */}
-    <div className="form-group full animate-in">
-      <label>Online Signature *</label>
-      <div 
-        ref={sigContainerRef} // Attach the ref here
-        className="signature-container"
-      >
-        <SignatureCanvas 
-          ref={(ref) => setSigPad(ref)}
-          backgroundColor="white"
-          penColor="black"
-          // Use the dynamic canvasWidth here
-          canvasProps={{ 
-            width: canvasWidth, 
-            height: 180, 
-            className: 'sigCanvas' 
-          }} 
-        />
-      </div>
-      <button 
-        type="button" 
-        className="clear-sig-btn" 
-        onClick={() => sigPad && sigPad.clear()}
-      >
-        Clear Signature
-      </button>
-    </div>
-
-  <button
-    type="submit"
-    className={`submit-btn ${loading ? "processing" : ""} animate-in`}
-    disabled={loading}
-  >
-    {loading ? "Processing..." : "Submit Registration"}
-  </button>
-</form>
+                <button
+                  type="submit"
+                  className={`submit-btn ${loading ? "processing" : ""} animate-in`}
+                  disabled={loading}
+                >
+                  {loading ? "Processing..." : "Submit Registration"}
+                </button>
+              </form>
 
               {message && (
                 <div className={`status-message ${isError ? "error" : "success"}`}>
@@ -415,7 +459,7 @@ const handleSubmit = async (e) => {
                 </div>
 
                 <div className="confirmation-message">
-                  <p>You will be contacted by our team shortly after your information is received.</p>
+                  <p>Thank you. Our team will review your information and be in touch shortly. All information shared will remain confidential</p>
                 </div>
 
                 <div className="redirect-status">
