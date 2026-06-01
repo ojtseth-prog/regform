@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./App.css";
 import SignatureCanvas from "react-signature-canvas";
+import TermsModal from "./TermsModal";
 
 
 const Icons = {
@@ -67,6 +68,9 @@ function App() {
   const [scrolled, setScrolled] = useState(false);
   const [currentView, setCurrentView] = useState("form");
   const [countdown, setCountdown] = useState(5);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showSigAlert, setShowSigAlert] = useState(false);
 
   const formatUSPhoneNumber = (value) => {
     const digits = value.replace(/\D/g, ""); // Remove all non-digits
@@ -172,6 +176,11 @@ function App() {
       return;
     }
 
+    if (!termsAccepted) {
+      alert("Please accept the Terms and Conditions before submitting.");
+      return;
+    }
+
     if (!files.state_lic_file || !files.dea_lic_file) {
       alert("Please upload both State and DEA licenses.");
       return;
@@ -191,6 +200,8 @@ function App() {
     Object.keys(formData).forEach(key => {
       data.append(key, formData[key] || "");
     });
+    
+    data.append("terms_accepted", termsAccepted ? "1" : "0");
 
     // Change 2: Use getCanvas() instead of getTrimmedCanvas() to avoid the TypeError
     // This gets the signature exactly as drawn on the pad
@@ -413,7 +424,25 @@ function App() {
                   <div
                     ref={sigContainerRef} // Attach the ref here
                     className="signature-container"
+                    style={{ position: 'relative' }}
                   >
+                    {!termsAccepted && (
+                      <div 
+                         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 10, cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                         onClick={(e) => {
+                           e.preventDefault();
+                           e.stopPropagation();
+                           setShowSigAlert(true);
+                           setTimeout(() => setShowSigAlert(false), 3000);
+                         }}
+                      >
+                         {showSigAlert && (
+                           <div className="sig-alert-popup">
+                             Please accept the Terms and Conditions before signing.
+                           </div>
+                         )}
+                      </div>
+                    )}
                     <SignatureCanvas
                       ref={(ref) => setSigPad(ref)}
                       backgroundColor="white"
@@ -433,6 +462,25 @@ function App() {
                   >
                     Clear Signature
                   </button>
+                </div>
+
+                <div className="form-group full animate-in terms-checkbox-container">
+                  <input
+                    type="checkbox"
+                    id="terms"
+                    checked={termsAccepted}
+                    onClick={(e) => {
+                      if (!termsAccepted) {
+                        e.preventDefault();
+                        setShowTermsModal(true);
+                      }
+                    }}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    required
+                  />
+                  <label htmlFor="terms" className="terms-checkbox-text">
+                    I agree to the <span className="terms-link" onClick={(e) => { e.preventDefault(); setShowTermsModal(true); }}>Terms and Conditions</span>. I represent that I have legal authority to bind the pharmacy and medications are not suspect/illegitimate. *
+                  </label>
                 </div>
 
                 <button
@@ -471,6 +519,14 @@ function App() {
           )}
         </div>
       </main>
+
+      {/* Terms Modal */}
+      <TermsModal 
+        isOpen={showTermsModal} 
+        onClose={() => setShowTermsModal(false)} 
+        onAccept={() => setTermsAccepted(true)}
+        isAccepted={termsAccepted}
+      />
     </div>
   );
 }
