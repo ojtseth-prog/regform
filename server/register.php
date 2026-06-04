@@ -376,6 +376,7 @@ try {
 
     $mail->setFrom($smtp_user, 'CoreRx Pharmacy Registration');
     $mail->addAddress($admin_email);
+    $mail->addAddress($email_address);
     $mail->addReplyTo($email_address, $pharmacy_name);
 
     // Attachments

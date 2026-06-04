@@ -17,9 +17,10 @@
   background: white;
   width: 100%;
   max-width: 900px;
+  height: 90vh; /* Fixed height for consistent layout */
   max-height: 90vh;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -28,69 +29,83 @@
 
 .terms-modal-close {
   position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 32px;
-  background: none;
+  top: 20px;
+  right: 24px;
+  font-size: 28px;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   color: white;
   cursor: pointer;
-  z-index: 10;
-  line-height: 1;
+  z-index: 20;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.terms-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.terms-modal-header {
+  background: linear-gradient(135deg, #004a99 0%, #0066cc 100%);
+  color: white;
+  padding: 30px 40px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.terms-modal-header img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.terms-modal-header .header-text h1 {
+  font-size: 2rem;
+  margin: 0 0 4px 0;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.terms-modal-header .header-text p {
+  margin: 0;
+  font-size: 1.05rem;
+  opacity: 0.9;
+  color: #e0f2fe;
 }
 
 .terms-modal-body {
+  flex: 1; /* Takes remaining space */
   overflow-y: auto;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   color: #333;
   background-color: white;
-  height: 100%;
+  padding: 0;
 }
 
 .terms-modal-body .container {
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-}
-
-.terms-modal-body .header {
-  background: linear-gradient(135deg, #004a99 0%, #0066cc 100%);
-  color: white;
-  padding: 40px 20px;
-  text-align: center;
-  margin-bottom: 30px;
-  border-radius: 0 0 20px 20px;
-  position: relative;
-}
-
-.terms-modal-body .header img {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-  background: white;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.terms-modal-body .header h1 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.terms-modal-body .header p {
-  text-align: center;
-  margin-bottom: 0;
-  font-size: 1.1rem;
-  opacity: 0.9;
-  color: white;
+  padding: 30px 40px;
 }
 
 .terms-modal-body .content {
   background: white;
-  padding: 40px 0;
+  padding: 10px 0 40px; /* Reduced top padding */
   border-radius: 0;
   box-shadow: none;
 }
@@ -139,57 +154,81 @@
   border-radius: 0 8px 8px 0;
 }
 
-.terms-modal-body .modal-footer {
-  margin-top: 40px;
-  padding-top: 30px;
+.terms-modal-footer {
+  background: white;
+  padding: 24px 40px;
   border-top: 1px solid #e2e8f0;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  flex-shrink: 0;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.03);
+  z-index: 10;
 }
 
-.terms-modal-body .modal-footer p {
+.terms-modal-footer p {
+  margin: 0;
   color: #64748b;
+  font-size: 0.95rem;
+  flex: 1;
+  line-height: 1.5;
   text-align: left;
-  margin-bottom: 30px;
-  font-size: 15px;
-  width: 100%;
 }
 
-.terms-modal-body .back-link {
-  display: inline-block;
-  margin-top: 0;
-  padding: 12px 30px;
+.terms-modal-footer .back-link {
+  padding: 14px 32px;
   background: #004a99;
   color: white;
   text-decoration: none;
   border: none;
   font-size: 16px;
-  border-radius: 4px;
-  transition: background 0.3s;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.2s ease;
   cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 74, 153, 0.2);
 }
 
-.terms-modal-body .back-link:hover {
+.terms-modal-footer .back-link:hover:not(.disabled) {
   background: #003366;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 74, 153, 0.3);
 }
 
-.terms-modal-body .back-link.disabled {
-  background: #cccccc;
+.terms-modal-footer .back-link.disabled {
+  background: #e2e8f0;
   cursor: not-allowed;
-  color: #666666;
+  color: #94a3b8;
+  box-shadow: none;
 }
 
-.terms-modal-body .back-link.disabled:hover {
-  background: #cccccc;
-}
-
-@media (max-width: 600px) {
-  .terms-modal-body .content {
-    padding: 20px;
+@media (max-width: 768px) {
+  .terms-modal-header {
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
   
-  .terms-modal-body .header h1 {
-    font-size: 1.5rem;
+  .terms-modal-header img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .terms-modal-footer {
+    padding: 20px 24px;
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .terms-modal-footer .back-link {
+    width: 100%;
+  }
+  
+  .terms-modal-body .container {
+    padding: 24px;
   }
 }

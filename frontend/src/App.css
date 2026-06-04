@@ -637,14 +637,31 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
+  cursor: pointer;
 }
 .terms-checkbox-container input[type="checkbox"] {
+  display: none;
+}
+.custom-checkbox {
   width: 24px;
   height: 24px;
+  min-width: 24px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
   cursor: pointer;
-  margin: 0;
   flex-shrink: 0;
-  accent-color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: white;
+}
+.custom-checkbox.checked {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+}
+.custom-checkbox:hover {
+  border-color: var(--primary-blue);
 }
 .terms-checkbox-text {
   margin: 0 !important;

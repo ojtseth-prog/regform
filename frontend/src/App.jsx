@@ -464,23 +464,29 @@ function App() {
                   </button>
                 </div>
 
-                <div className="form-group full animate-in terms-checkbox-container">
+                <div className="form-group full animate-in terms-checkbox-container" onClick={() => {
+                    if (!termsAccepted) {
+                      setShowTermsModal(true);
+                    } else {
+                      setTermsAccepted(false);
+                    }
+                  }}>
                   <input
                     type="checkbox"
                     id="terms"
                     checked={termsAccepted}
-                    onClick={(e) => {
-                      if (!termsAccepted) {
-                        e.preventDefault();
-                        setShowTermsModal(true);
-                      }
-                    }}
-                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    onChange={() => {}}
                     required
+                    style={{ display: 'none' }}
                   />
-                  <label htmlFor="terms" className="terms-checkbox-text">
-                    I agree to the <span className="terms-link" onClick={(e) => { e.preventDefault(); setShowTermsModal(true); }}>Terms and Conditions</span>. I represent that I have legal authority to bind the pharmacy and medications are not suspect/illegitimate. *
-                  </label>
+                  <div className={`custom-checkbox ${termsAccepted ? 'checked' : ''}`}>
+                    {termsAccepted && (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                    )}
+                  </div>
+                  <span className="terms-checkbox-text">
+                    I agree to the <span className="terms-link" onClick={(e) => { e.stopPropagation(); setShowTermsModal(true); }}>Terms and Conditions</span>. I represent that I have legal authority to bind the pharmacy and medications are not suspect/illegitimate. *
+                  </span>
                 </div>
 
                 <button
