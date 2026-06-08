@@ -45,7 +45,6 @@ const TermsModal = ({ isOpen, onClose, onAccept, isAccepted }) => {
         <div className="terms-modal-body" ref={contentRef} onScroll={handleScroll}>
           <div className="container">
             <div className="content">
-              <p className="last-updated"><strong>Last Updated:</strong> May 29, 2026</p>
 
               <div className="highlight-box">
                 <strong>IMPORTANT:</strong> By using the CoreRx Return Services, you affirm that you have read, understood, and agree to be bound by these Terms and Conditions. You further represent and warrant that you have the legal authority to bind yourself and the entity you represent.
