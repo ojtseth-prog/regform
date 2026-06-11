@@ -149,7 +149,11 @@ function App() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "contact_number" || name === "mobile") {
+    if (name === "zip_code") {
+      // Only allow digits and restrict to exactly 5 characters
+      const digits = value.replace(/\D/g, "").slice(0, 5);
+      setFormData({ ...formData, [name]: digits });
+    } else if (name === "contact_number" || name === "mobile") {
       // Apply US formatting
       setFormData({ ...formData, [name]: formatUSPhoneNumber(value) });
     } else {
@@ -186,10 +190,10 @@ function App() {
       return;
     }
 
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.email_address)) {
-        alert("Please enter a complete email address (e.g., name@example.com)");
-        return;
+      alert("Please enter a complete email address (e.g., name@example.com)");
+      return;
     }
 
     setLoading(true);
@@ -200,7 +204,7 @@ function App() {
     Object.keys(formData).forEach(key => {
       data.append(key, formData[key] || "");
     });
-    
+
     data.append("terms_accepted", termsAccepted ? "1" : "0");
 
     // Change 2: Use getCanvas() instead of getTrimmedCanvas() to avoid the TypeError
@@ -278,7 +282,7 @@ function App() {
             <li onClick={() => handleNavigation("https://corerxreturns.com/")}>
               Home
             </li>
-            <li onClick={() => handleNavigation("https://corerxreturns.com/about")}>
+            <li onClick={() => handleNavigation("https://corerxreturns.com/about-us")}>
               About Us
             </li>
             <li onClick={() => handleNavigation("https://corerxreturns.com/services")}>
@@ -353,7 +357,16 @@ function App() {
                   </div>
                   <div className="form-group third">
                     <label>Zip Code *</label>
-                    <input type="text" name="zip_code" value={formData.zip_code} onChange={handleChange} required />
+                    <input
+                      type="text"
+                      name="zip_code"
+                      value={formData.zip_code}
+                      onChange={handleChange}
+                      required
+                      maxLength="5"
+                      pattern="\d{5}"
+                      title="5-digit US Zip Code"
+                    />
                   </div>
                 </div>
 
@@ -373,21 +386,21 @@ function App() {
                       <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} required />
                     </div>
                   </div>
-<div className="form-group third">
-  <label>Email Address *</label>
-  <div className="input-wrapper">
-    <span className="input-icon"><Icons.Email /></span>
-    <input 
-      type="email" 
-      name="email_address" 
-      value={formData.email_address} 
-      onChange={handleChange} 
-      required 
-      placeholder="email@example.com"
-      title="Please enter a valid email address"
-    />
-  </div>
-</div>
+                  <div className="form-group third">
+                    <label>Email Address *</label>
+                    <div className="input-wrapper">
+                      <span className="input-icon"><Icons.Email /></span>
+                      <input
+                        type="email"
+                        name="email_address"
+                        value={formData.email_address}
+                        onChange={handleChange}
+                        required
+                        placeholder="email@example.com"
+                        title="Please enter a valid email address"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Row 5: Contact, Authorized, Wholesaler (3 Fields) */}
@@ -427,20 +440,20 @@ function App() {
                     style={{ position: 'relative' }}
                   >
                     {!termsAccepted && (
-                      <div 
-                         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 10, cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                         onClick={(e) => {
-                           e.preventDefault();
-                           e.stopPropagation();
-                           setShowSigAlert(true);
-                           setTimeout(() => setShowSigAlert(false), 3000);
-                         }}
+                      <div
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 10, cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setShowSigAlert(true);
+                          setTimeout(() => setShowSigAlert(false), 3000);
+                        }}
                       >
-                         {showSigAlert && (
-                           <div className="sig-alert-popup">
-                             Please accept the Terms and Conditions before signing.
-                           </div>
-                         )}
+                        {showSigAlert && (
+                          <div className="sig-alert-popup">
+                            Please accept the Terms and Conditions before signing.
+                          </div>
+                        )}
                       </div>
                     )}
                     <SignatureCanvas
@@ -465,17 +478,17 @@ function App() {
                 </div>
 
                 <div className="form-group full animate-in terms-checkbox-container" onClick={() => {
-                    if (!termsAccepted) {
-                      setShowTermsModal(true);
-                    } else {
-                      setTermsAccepted(false);
-                    }
-                  }}>
+                  if (!termsAccepted) {
+                    setShowTermsModal(true);
+                  } else {
+                    setTermsAccepted(false);
+                  }
+                }}>
                   <input
                     type="checkbox"
                     id="terms"
                     checked={termsAccepted}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     required
                     style={{ display: 'none' }}
                   />
@@ -485,7 +498,7 @@ function App() {
                     )}
                   </div>
                   <span className="terms-checkbox-text">
-                    I agree to the <span className="terms-link" onClick={(e) => { e.stopPropagation(); setShowTermsModal(true); }}>Terms and Conditions</span>. I represent that I have legal authority to bind the pharmacy and medications are not suspect/illegitimate. *
+                    By using Core Rx Return Services, you affirm that you have read, understood, and agree to be bound by these <span className="terms-link" onClick={(e) => { e.stopPropagation(); setShowTermsModal(true); }}>Terms and Conditions</span> *
                   </span>
                 </div>
 
@@ -527,9 +540,9 @@ function App() {
       </main>
 
       {/* Terms Modal */}
-      <TermsModal 
-        isOpen={showTermsModal} 
-        onClose={() => setShowTermsModal(false)} 
+      <TermsModal
+        isOpen={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
         onAccept={() => setTermsAccepted(true)}
         isAccepted={termsAccepted}
       />

@@ -39,9 +39,9 @@ $db_host       = "localhost";
 $db_user       = "u416162286_new_dbcallify";
 $db_password   = "iMPACTPROTECH@2023";
 $db_name       = "u416162286_new_dbcallify";
-$admin_email   = "info@corerxreturns.com";
-$smtp_user     = "allen@impactproph.com";
-$smtp_password = "jtie zdrt npms lgcd";
+$admin_email   = "info+admin@corerxreturns.com"; // Use a plus-alias so Gmail forces it to Inbox instead of just Sent
+$smtp_user     = "info@corerxreturns.com";
+$smtp_password = "hpgi scut elgu lmjs";
 $upload_dir    = __DIR__ . '/uploads/';
 $reg_time = date('m/d/Y h:i A');
 
@@ -161,11 +161,19 @@ $pdf_filename = 'Application_' . $inserted_id . '_' . time() . '.pdf';
 $pdf_path = $upload_dir . $pdf_filename;
 
 try {
-    $pdf = new \FPDF('P', 'mm', 'Letter');
+    $pdf = new class('P', 'mm', 'Letter') extends \FPDF {
+        public function Footer() {
+            $this->SetY(-15);
+            $this->SetFont('Calibri', '', 9);
+            $this->SetTextColor(100);
+            $this->Cell(0, 4, '225A Sunrise Hwy Lynbrook, NY 11563     TOLL FREE 888-700-9896     FAX 1-800-498-9028     INFO@CORERXRETURNS.COM', 0, 0, 'C');
+            $this->SetTextColor(0);
+        }
+    };
     $pdf->AddFont('Calibri', '', 'calibri.php');
     $pdf->AddFont('Calibri', 'B', 'calibrib.php');
     $pdf->AddPage();
-    $pdf->SetAutoPageBreak(false);
+    $pdf->SetAutoPageBreak(true, 15);
 
     $fontMain = 'Calibri'; 
     $left_m = 10;
@@ -321,12 +329,11 @@ try {
     $pdf->Cell(0, 5, 'Please attach a copy of your current/active Wholesaler Invoice', 0, 1, 'C');
     $pdf->Ln(5);
     $pdf->SetFont($fontMain, 'B', 10);
-    $terms_text = "By using the Core Rx Return Services, you affirm that you have read, understood and agree to be bound by these Terms and Conditions that you have the legal authority to bind yourself and the entity you represent. You further represent and warrant that the medications are not suspect or illegitimate and were purchased from a licensed wholesaler whose information is listed above.";
+    $terms_text = "By Using Core Rx Return Services, you affirm that you have read, understood, and agree to be bound by these Terms and Conditions that you have the legal authority to bind yourself and the entity you represent. You further represent and warrant that the medications are not suspect or illegitimate and were purchased from a licensed wholesaler whose information is listed above.";
 
     $pdf->MultiCell($width, 6, iconv('UTF-8', 'windows-1252', $terms_text), 0, 'J');
 
    // --- SIGNATURE SECTION ---
-// --- SIGNATURE SECTION ---
     $pdf->Ln(8);
     $current_sig_y = $pdf->GetY();
     
@@ -349,11 +356,69 @@ if ($has_signature && file_exists($sig_file_path)) {
     $pdf->SetFont($fontMain, 'B', 10);
     $pdf->Cell(34, 8, $signed_date, 'B', 1);
 
-    // --- FOOTER ---
-    $pdf->SetY(265);
-    $pdf->SetFont($fontMain, '', 9);
-    $pdf->SetTextColor(100);
-    $pdf->Cell(0, 4, '225A Sunrise Hwy Lynbrook, NY 11563     TOLL FREE 888-700-9896     FAX 1-800-498-9028     INFO@CORERXRETURNS.COM', 0, 0, 'C');
+    // --- PAGE 2: TERMS AND CONDITIONS ---
+    $pdf->AddPage();
+    // Reduce font size to fit on one page
+    $pdf->SetFont($fontMain, 'B', 12);
+    $pdf->Cell(0, 6, 'Terms and Conditions', 0, 1, 'C');
+    $pdf->SetFont($fontMain, 'B', 10);
+    $pdf->Cell(0, 5, 'Reverse Distribution Services Agreement', 0, 1, 'C');
+    $pdf->Ln(3);
+
+    $terms = [
+        "Please read the following Terms and Conditions (these “Terms”) carefully. The acceptability, valuation, and acceptance of any return is at the sole discretion of Core Rx Returns and/or the manufacturer. By returning goods to Core Rx Returns, you agree to the following Terms:",
+        "",
+        "[B]RETURNS- Process for Product Returns",
+        "In order to return acceptable returnable goods to Core Rx Returns, customers will be required to create an inventory list of items to be returned.",
+        "Core Rx Returns requires the following from each returning entity: Inventory List, Transaction Information (TI): (A) the proprietary or established name or names of the product; (B) the strength and dosage form of the product; (C) the National Drug Code (NDC) number of the product; (D) the container size; (E) the number of containers; (F) the lot number of the product; (G) the date of the transaction; (H) the date of the shipment, if more than 24 hours after the date of the transaction; (I) the business name and address of the person from whom ownership is being transferred; and (J) the business name and address of the “person to whom ownership is being transferred.”",
+        "For Schedule II narcotics, a completed DEA Form 222 (Core Rx Returns will supply form)",
+        "A Return Authorization (RA) will then be provided. If the required information noted above is not provided, no RA will be granted and no credit will be issued. Customer agrees to provide additional information as requested by Core Rx Returns. RA is required to return products. Credit will not be issued without prior notification and authorization of the return.",
+        "All returns, once approved, must be accompanied by your inventory list showing NDC, Quantity, Lot #, Expiration Date. All returns must be received by the CoreRx Returns Return Agent, with the RA label attached on the exterior of the box and the inventory list contained within the box.",
+        "This is the most efficient way to obtain authorization to return and obtain a return label and track the progress of your return. Returned quantities will be reviewed by Core Rx Returns, and final credit will be based on the manufacturer’s credit determination minus Core Rx Returns and wholesaler processing fees. Costs incurred by Core Rx Returns due to failure to follow these instructions, will be deducted from the credit issued.",
+        "The percentage of unsalable products eligible for credit varies greatly and is influenced by product mix, inventory management, and whether opened (partial) or unopened. Manufacturer credit varies according to a specific manufacturer’s returned goods policy. Such policies and product eligibility criteria are constantly changing even without notice. An item for which the manufacturer provided credit in the past may no longer be eligible for credit, and vice versa. At times, manufacturers will take back credit previously issued to Core Rx Returns after that credit was already distributed to the end user/customer. In that case Core Rx Returns will withhold credit payments to that customer until the sum of the manufacturer’s chargeback is replaced.",
+        "Core Rx Returns only accepts unsalable returns of prescription drugs, controlled drugs, including Class II-Vs, recalled drugs.",
+        "",
+        "[B]Returnable Product for Reimbursement",
+        "Full and partial containers of prescription drug products in original packaging",
+        "",
+        "[B]Returnable Items, No Reimbursement",
+        "The following may be returned for proper disposal only; customer acknowledges and agrees that there will be no reimbursement for: Reconstituted products, Products that require refrigeration or to be kept frozen with certain exceptions (e.g. certain insulin pens or other medications that manufacturers give credit for), Products packaged in tubes (e.g. creams, ointments) that are open, Products packaged in vials, syringes, and bags that are open, Inhaler/nasal products that are open or removed from the outer wrapping, Full containers of Over-the-Counter products",
+        "",
+        "[B]Non-returnable Product",
+        "Products in salable condition, Professional samples, Product(s) provided free of charge, donations, or labeled “clinical trials.”, Products obtained from a source other than a source of normal distribution, Products purchased from another pharmacy or a prescriber, Products distributed outside of the U.S., Puerto Rico, and all U.S. territories, Products with labeling in a foreign language , Products purchased or otherwise obtained in violation of any Federal, State or local law or regulation, Products with a label defaced, removed, covered or unreadable., Products with a removed or missing or unreadable DEA, NDC, Lot number or expiration date where not caused by a previously affixed pharmacy label., Unauthorized returns, Products dispensed to patients, Returns are subject to acceptance by Core Rx Returns at its principal place of business. Notwithstanding any other provisions, wherever Core Rx Returns, in its sole discretion, has any doubt as to the source of the goods or whether they are counterfeit, Core Rx Returns reserves the right to place the goods into a “Transaction Hold”. The Customer will be asked to provide accurate or complete information before the return will be accepted. If the Customer does not provide corrected Transaction Data within one hour of the request being made or if there is a question about the product being Suspect or Illegitimate or the accompanying documents being fraudulent, the return will be Quarantined without prior notice. Core Rx Returns does not accept Health and Beauty Care products, including private labels. Core Rx Returns will only issue credit on eligible products based on manufacturer policy.",
+        "",
+        "[B]SHIPPING",
+        "Unless expressly authorized in writing, freight charges for all returns are the responsibility of the customer. COD shipments will be refused. Insuring and tracking returns are the responsibility of the customer.",
+        "For controlled substances, Customers will be notified immediately upon receipt of the return, of any mistakes, including shortages, in the controlled substance return. Failure of the customer to resolve the matter within 24 hours will obligate Core Rx Returns to report controlled product substance shortages directly to the DEA on a DEA-106, Report of Theft or Loss of controlled Substances, online at: www.deadiversion.usdoj.gov/21CFR_reorts/theft/index.html.",
+        "",
+        "[B]PAYMENT TERMS",
+        "All processing fees will be deducted from credits received. The processing fee for Core Rx Returns’ services is a percentage of actual credit received. Additional processing fees may be deducted for wholesaler processing.",
+        "You will receive multiple credits and checks as the returns are processed.",
+        "The percent of product’s return value for prescriptions drugs is determined by the manufacturer. Core Rx Returns does not determine actual credit issued. All processing fees will be subtracted from this amount.",
+        "Core Rx Returns reserves the right to destroy without notification, credit, or return to the customer, any product return that does not conform to these terms and conditions. Customers are advised that the process from when you return product to Core Rx Returns to the time the manufacturer issues credit can take anywhere from 6-12 months. Since the expected credit paybacks from individual manufacturers is highly variable and constantly changing, we do not issue estimated credits amounts to the pharmacy.",
+        "At times, manufacturers will take back credit previously issued to Core Rx Returns after that credit was already distributed to the end user/customer. In that case Core Rx Returns will withhold credit payments to that customer until the sum of the manufacturer’s chargeback is replaced. This retroactive credit reversal may occur months later and is beyond the control of Core Rx Returns.",
+        "",
+        "[B]LIABILITY",
+        "Core Rx Returns shall have no responsibility or liability for products returned without prior notification.",
+        "Core Rx Returns shall not be liable for any loss, claim, or damage resulting from products, delivery, or failure of delivery thereof, and the Pharmacy agrees to hold Core Rx Returns harmless for any such loss, claim, or damage.",
+        "Any Core Rx Returns on product returns must be resolved within twelve (12) months of original return (debit memo) date.",
+        "",
+        "[B]DISCLAIMER",
+        "Core Rx Returns is not responsible for returns which are lost, damaged or not complaint with return procedures. Core Rx Returns reserves the right to make all final determinations. These terms and conditions may be modified by Core Rx Returns at its option, from time to time, upon written notice to customers."
+    ];
+
+    foreach ($terms as $line) {
+        if (strpos($line, '[B]') === 0) {
+            $pdf->SetFont($fontMain, 'B', 7);
+            $clean_line = substr($line, 3);
+            $pdf->MultiCell($width, 3.8, iconv('UTF-8', 'windows-1252//TRANSLIT', $clean_line), 0, 'L');
+        } else if (trim($line) === '') {
+            $pdf->Ln(1.5);
+        } else {
+            $pdf->SetFont($fontMain, '', 6.5);
+            $pdf->MultiCell($width, 3.5, iconv('UTF-8', 'windows-1252//TRANSLIT', $line), 0, 'L');
+        }
+    }
 
     $pdf->Output('F', $pdf_path);
 } catch (Exception $e) {
@@ -373,10 +438,10 @@ try {
     $mail->Password   = $smtp_password;
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
 
-    $mail->setFrom($smtp_user, 'CoreRx Pharmacy Registration');
+    $mail->setFrom($smtp_user, 'CoreRx Returns LLC - Registration');
     $mail->addAddress($admin_email);
-    $mail->addAddress($email_address);
     $mail->addReplyTo($email_address, $pharmacy_name);
 
     // Attachments
@@ -392,7 +457,7 @@ try {
 
     $mail->isHTML(true);
     $mail->Subject = "NEW PHARMACY REGISTRATION from  {$pharmacy_name}";
- $mail->Body = "
+    $mail->Body = "
     <div style='background-color: #f4f7f6; padding: 30px; font-family: Arial, sans-serif;'>
         <div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;'>
             <!-- Header -->
@@ -443,30 +508,109 @@ try {
     </div>";
 
 
+    // --- Send to Admin ---
     $mail->send();
     $mail_sent = true;
-       if ($mail_sent) {
-        // 1. Delete the generated PDF
-        if (file_exists($pdf_path)) unlink($pdf_path);
-        
-        // 2. Delete the signature image
-        if (file_exists($sig_file_path)) unlink($sig_file_path);
-        
-        // 3. Delete the uploaded State License
-       // if (!empty($state_lic_file)) {
-       //     $state_path = $upload_dir . $state_lic_file;
-       //     if (file_exists($state_path)) unlink($state_path);
-       // }
-        
-        // 4. Delete the uploaded DEA License
-      //  if (!empty($dea_lic_file)) {
-       //     $dea_path = $upload_dir . $dea_lic_file;
-       //     if (file_exists($dea_path)) unlink($dea_path);
-       // }
+    
+    // Close the connection for the first mailer
+    $mail->smtpClose();
+} catch (Exception $e) {
+    error_log("Admin Mail Error: " . $mail->ErrorInfo);
+}
+
+try {
+    // --- Send to User using a BRAND NEW PHPMailer instance ---
+    $userMail = new PHPMailer(true);
+    $userMail->isSMTP();
+    $userMail->Host       = 'smtp.gmail.com';
+    $userMail->SMTPAuth   = true;
+    $userMail->Username   = $smtp_user;
+    $userMail->Password   = $smtp_password;
+    $userMail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $userMail->Port       = 587;
+
+    $userMail->setFrom($smtp_user, 'CoreRx Returns LLC - Registration');
+    $userMail->addAddress($email_address);
+    
+    // Add all attachments for the user
+    if ($pdf_path && file_exists($pdf_path)) {
+        $userMail->addAttachment($pdf_path, 'CoreRx_Application_Form.pdf');
+    }
+    if ($state_lic_file && file_exists($upload_dir . $state_lic_file)) {
+        $userMail->addAttachment($upload_dir . $state_lic_file, 'State_License.' . pathinfo($state_lic_file, PATHINFO_EXTENSION));
+    }
+    if ($dea_lic_file && file_exists($upload_dir . $dea_lic_file)) {
+        $userMail->addAttachment($upload_dir . $dea_lic_file, 'DEA_License.' . pathinfo($dea_lic_file, PATHINFO_EXTENSION));
     }
 
+    $userMail->isHTML(true);
+    $userMail->Subject = "Registration Confirmation - CoreRx Returns";
+    $userMail->Body = "
+    <div style='background-color: #f4f7f6; padding: 30px; font-family: Arial, sans-serif;'>
+        <div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;'>
+            <!-- Header -->
+            <div style='background-color: #004a99; padding: 20px; text-align: center;'>
+                <h2 style='color: #ffffff; margin: 0; font-size: 20px; letter-spacing: 1px;'>Registration Received</h2>
+            </div>
+            
+            <!-- Body -->
+            <div style='padding: 25px; color: #333333; line-height: 1.6;'>
+                <p style='margin-top: 0;'>Hello " . h($contact_person) . ",</p>
+                <p>Thank you for submitting your registration for <strong>" . h($pharmacy_name) . "</strong>.</p>
+                <p>We have successfully received your application form and associated documents. Our team will review your application and get back to you shortly.</p>
+                
+                <p>Below are the details of your registration:</p>
+                <table style='width: 100%; border-collapse: collapse; margin: 20px 0;'>
+                    <tr>
+                        <td style='padding: 10px; border-bottom: 1px solid #eeeeee; font-weight: bold; width: 150px; color: #666;'>Pharmacy Name</td>
+                        <td style='padding: 10px; border-bottom: 1px solid #eeeeee;'>".h($pharmacy_name)."</td>
+                    </tr>
+                    <tr>
+                        <td style='padding: 10px; border-bottom: 1px solid #eeeeee; font-weight: bold; color: #666;'>Contact Person</td>
+                        <td style='padding: 10px; border-bottom: 1px solid #eeeeee;'>".h($contact_person)."</td>
+                    </tr>
+                    <tr>
+                        <td style='padding: 10px; border-bottom: 1px solid #eeeeee; font-weight: bold; color: #666;'>Email Address</td>
+                        <td style='padding: 10px; border-bottom: 1px solid #eeeeee;'><a href='mailto:".h($email_address)."' style='color: #004a99; text-decoration: none;'>".h($email_address)."</a></td>
+                    </tr>
+                    <tr>
+                        <td style='padding: 10px; border-bottom: 1px solid #eeeeee; font-weight: bold; color: #666;'>Submission Date</td>
+                        <td style='padding: 10px; border-bottom: 1px solid #eeeeee;'>$reg_time</td>
+                    </tr>
+                    <tr>
+                        <td style='padding: 10px; border-bottom: 1px solid #eeeeee; font-weight: bold; color: #666;'>Registration ID</td>
+                        <td style='padding: 10px; border-bottom: 1px solid #eeeeee;'>#$inserted_id</td>
+                    </tr>
+                </table>
+                
+                <div style='background-color: #fff9e6; border-left: 4px solid #ffcc00; padding: 15px; margin-top: 20px;'>
+                    <p style='margin: 0; font-size: 13px; color: #856404;'>
+                        <strong>Note:</strong> A copy of your completed Application Form (PDF), State License, and DEA License are attached to this email for your records.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div style='background-color: #f9f9f9; padding: 15px; text-align: center; font-size: 12px; color: #999999; border-top: 1px solid #eeeeee;'>
+                CoreRx Returns<br>
+                225A Sunrise Hwy Lynbrook, NY 11563<br>
+                1-888-700-9896 | info@corerxreturns.com
+            </div>
+        </div>
+    </div>";
+
+    $userMail->send();
 } catch (Exception $e) {
-    error_log("Mail Error: " . $mail->ErrorInfo);
+    error_log("User Mail Error: " . $userMail->ErrorInfo);
+}
+
+// Cleanup files if the main admin mail was sent
+if ($mail_sent) {
+    // 1. Delete the generated PDF
+    if (file_exists($pdf_path)) unlink($pdf_path);
+    
+    // 2. Delete the signature image
+    if (file_exists($sig_file_path)) unlink($sig_file_path);
 }
 
 // ─── Response ───

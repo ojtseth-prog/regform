@@ -47,155 +47,48 @@ const TermsModal = ({ isOpen, onClose, onAccept, isAccepted }) => {
             <div className="content">
 
               <div className="highlight-box">
-                <strong>IMPORTANT:</strong> By using the CoreRx Return Services, you affirm that you have read, understood, and agree to be bound by these Terms and Conditions. You further represent and warrant that you have the legal authority to bind yourself and the entity you represent.
+                <strong>IMPORTANT:</strong> By Using Core Rx Return Services, you affirm that you have read, understood, and agree to be bound by these Terms and Conditions that you have the legal authority to bind yourself and the entity you represent. You further represent and warrant that the medications are not suspect or illegitimate and were purchased from a licensed wholesaler whose information is listed above.
               </div>
 
-              <h2>1. Definitions</h2>
-              <p>In these Terms and Conditions, the following definitions apply:</p>
-              <ul>
-                <li><strong>"CoreRx"</strong> refers to CoreRx Returns, located at 225A Sunrise Hwy, Lynbrook, NY 11563.</li>
-                <li><strong>"Customer"</strong> refers to the pharmacy, healthcare facility, or entity registering for and using the return services.</li>
-                <li><strong>"Services"</strong> refers to reverse distribution, pharmaceutical returns, and related services provided by CoreRx.</li>
-                <li><strong>"Products"</strong> refers to pharmaceutical items, medications, and healthcare products being returned.</li>
-                <li><strong>"Regulatory Authorities"</strong> refers to DEA, FDA, state boards of pharmacy, and other applicable regulatory bodies.</li>
-              </ul>
+              <p>Please read the following Terms and Conditions (these "Terms") carefully. The acceptability, valuation, and acceptance of any return is at the sole discretion of Core Rx Returns and/or the manufacturer. By returning goods to Core Rx Returns, you agree to the following Terms:</p>
 
-              <h2>2. Acceptance of Terms</h2>
-              <p>By accessing or using the CoreRx Returns Portal and Services, you agree to comply with and be bound by these Terms and Conditions. If you do not agree to these terms, you must not use the Services. These terms constitute a legally binding agreement between you and CoreRx.</p>
+              <h2>RETURNS - Process for Product Returns</h2>
+              <p>In order to return acceptable returnable goods to Core Rx Returns, customers will be required to create an inventory list of items to be returned.</p>
+              <p>Core Rx Returns requires the following from each returning entity: Inventory List, Transaction Information (TI): (A) the proprietary or established name or names of the product; (B) the strength and dosage form of the product; (C) the National Drug Code (NDC) number of the product; (D) the container size; (E) the number of containers; (F) the lot number of the product; (G) the date of the transaction; (H) the date of the shipment, if more than 24 hours after the date of the transaction; (I) the business name and address of the person from whom ownership is being transferred; and (J) the business name and address of the "person to whom ownership is being transferred."</p>
+              <p>For Schedule II narcotics, a completed DEA Form 222 (Core Rx Returns will supply form)</p>
+              <p>A Return Authorization (RA) will then be provided. If the required information noted above is not provided, no RA will be granted and no credit will be issued. Customer agrees to provide additional information as requested by Core Rx Returns. RA is required to return products. Credit will not be issued without prior notification and authorization of the return.</p>
+              <p>All returns, once approved, must be accompanied by your inventory list showing NDC, Quantity, Lot #, Expiration Date. All returns must be received by the CoreRx Returns Return Agent, with the RA label attached on the exterior of the box and the inventory list contained within the box.</p>
+              <p>This is the most efficient way to obtain authorization to return and obtain a return label and track the progress of your return. Returned quantities will be reviewed by Core Rx Returns, and final credit will be based on the manufacturer’s credit determination minus Core Rx Returns and wholesaler processing fees. Costs incurred by Core Rx Returns due to failure to follow these instructions, will be deducted from the credit issued.</p>
+              <p>The percentage of unsalable products eligible for credit varies greatly and is influenced by product mix, inventory management, and whether opened (partial) or unopened. Manufacturer credit varies according to a specific manufacturer’s returned goods policy. Such policies and product eligibility criteria are constantly changing even without notice. An item for which the manufacturer provided credit in the past may no longer be eligible for credit, and vice versa. At times, manufacturers will take back credit previously issued to Core Rx Returns after that credit was already distributed to the end user/customer. In that case Core Rx Returns will withhold credit payments to that customer until the sum of the manufacturer’s chargeback is replaced.</p>
+              <p>Core Rx Returns only accepts unsalable returns of prescription drugs, controlled drugs, including Class II-Vs, recalled drugs.</p>
 
-              <h2>3. Eligibility and Registration</h2>
-              <h3>3.1 Eligibility Requirements</h3>
-              <ul>
-                <li>You must be a licensed pharmacy, healthcare facility, or authorized entity permitted to handle pharmaceutical products.</li>
-                <li>You must maintain valid state pharmacy licenses and DEA registrations where applicable.</li>
-                <li>You must be in good standing with all relevant Regulatory Authorities.</li>
-              </ul>
+              <h2>Returnable Product for Reimbursement</h2>
+              <p>Full and partial containers of prescription drug products in original packaging</p>
 
-              <h3>3.2 Registration Accuracy</h3>
-              <p>You agree to provide accurate, current, and complete information during the registration process. This includes but is not limited to:</p>
-              <ul>
-                <li>Corporate and DBA names</li>
-                <li>Physical address and contact information</li>
-                <li>Valid license numbers and expiration dates</li>
-                <li>Authorized wholesaler and supplier information</li>
-                <li>Manufacturer direct account details</li>
-              </ul>
+              <h2>Returnable Items, No Reimbursement</h2>
+              <p>The following may be returned for proper disposal only; customer acknowledges and agrees that there will be no reimbursement for: Reconstituted products, Products that require refrigeration or to be kept frozen with certain exceptions (e.g. certain insulin pens or other medications that manufacturers give credit for), Products packaged in tubes (e.g. creams, ointments) that are open, Products packaged in vials, syringes, and bags that are open, Inhaler/nasal products that are open or removed from the outer wrapping, Full containers of Over-the-Counter products</p>
 
-              <h3>3.3 Document Submission</h3>
-              <p>You must submit copies of:</p>
-              <ul>
-                <li>Valid State Pharmacy License</li>
-                <li>Valid DEA License (where applicable)</li>
-                <li>Current/active Wholesaler Invoice</li>
-              </ul>
+              <h2>Non-returnable Product</h2>
+              <p>Products in salable condition, Professional samples, Product(s) provided free of charge, donations, or labeled "clinical trials.", Products obtained from a source other than a source of normal distribution, Products purchased from another pharmacy or a prescriber, Products distributed outside of the U.S., Puerto Rico, and all U.S. territories, Products with labeling in a foreign language , Products purchased or otherwise obtained in violation of any Federal, State or local law or regulation, Products with a label defaced, removed, covered or unreadable., Products with a removed or missing or unreadable DEA, NDC, Lot number or expiration date where not caused by a previously affixed pharmacy label., Unauthorized returns, Products dispensed to patients, Returns are subject to acceptance by Core Rx Returns at its principal place of business. Notwithstanding any other provisions, wherever Core Rx Returns, in its sole discretion, has any doubt as to the source of the goods or whether they are counterfeit, Core Rx Returns reserves the right to place the goods into a "Transaction Hold". The Customer will be asked to provide accurate or complete information before the return will be accepted. If the Customer does not provide corrected Transaction Data within one hour of the request being made or if there is a question about the product being Suspect or Illegitimate or the accompanying documents being fraudulent, the return will be Quarantined without prior notice. Core Rx Returns does not accept Health and Beauty Care products, including private labels. Core Rx Returns will only issue credit on eligible products based on manufacturer policy.</p>
 
-              <h2>4. Product Returns and Compliance</h2>
-              <h3>4.1 Product Authenticity</h3>
-              <p>You represent and warrant that:</p>
-              <ul>
-                <li>All medications returned are not suspect or illegitimate</li>
-                <li>Products were purchased from licensed wholesalers whose information is accurately provided</li>
-                <li>Products have been stored and handled in accordance with manufacturer specifications</li>
-                <li>Returned products are not counterfeit, diverted, or otherwise non-authentic</li>
-              </ul>
+              <h2>Shipping</h2>
+              <p>Unless expressly authorized in writing, freight charges for all returns are the responsibility of the customer. COD shipments will be refused. Insuring and tracking returns are the responsibility of the customer.</p>
+              <p>For controlled substances, Customers will be notified immediately upon receipt of the return, of any mistakes, including shortages, in the controlled substance return. Failure of the customer to resolve the matter within 24 hours will obligate Core Rx Returns to report controlled product substance shortages directly to the DEA on a DEA-106, Report of Theft or Loss of controlled Substances, online at: www.deadiversion.usdoj.gov/21CFR_reorts/theft/index.html.</p>
 
-              <h3>4.2 Compliance with Laws</h3>
-              <p>You agree to comply with all applicable federal, state, and local laws, regulations, and guidelines governing:</p>
-              <ul>
-                <li>Pharmaceutical returns and reverse distribution</li>
-                <li>Controlled substance handling and documentation (where applicable)</li>
-                <li>Hazardous waste disposal regulations</li>
-                <li>Chain of custody requirements</li>
-                <li>Data privacy and security laws</li>
-              </ul>
+              <h2>Payment Terms</h2>
+              <p>All processing fees will be deducted from credits received. The processing fee for Core Rx Returns’ services is a percentage of actual credit received. Additional processing fees may be deducted for wholesaler processing.</p>
+              <p>You will receive multiple credits and checks as the returns are processed.</p>
+              <p>The percent of product’s return value for prescriptions drugs is determined by the manufacturer. Core Rx Returns does not determine actual credit issued. All processing fees will be subtracted from this amount.</p>
+              <p>Core Rx Returns reserves the right to destroy without notification, credit, or return to the customer, any product return that does not conform to these terms and conditions. Customers are advised that the process from when you return product to Core Rx Returns to the time the manufacturer issues credit can take anywhere from 6-12 months. Since the expected credit paybacks from individual manufacturers is highly variable and constantly changing, we do not issue estimated credits amounts to the pharmacy.</p>
+              <p>At times, manufacturers will take back credit previously issued to Core Rx Returns after that credit was already distributed to the end user/customer. In that case Core Rx Returns will withhold credit payments to that customer until the sum of the manufacturer’s chargeback is replaced. This retroactive credit reversal may occur months later and is beyond the control of Core Rx Returns.</p>
 
-              <h3>4.3 Prohibited Items</h3>
-              <p>You may not return:</p>
-              <ul>
-                <li>Counterfeit or suspected counterfeit products</li>
-                <li>Products from unauthorized or unlicensed sources</li>
-                <li>Hazardous materials not properly classified and documented</li>
-                <li>Products subject to recall without proper documentation</li>
-                <li>Any items that would violate DEA, FDA, or state regulations</li>
-              </ul>
+              <h2>Liability</h2>
+              <p>Core Rx Returns shall have no responsibility or liability for products returned without prior notification.</p>
+              <p>Core Rx Returns shall not be liable for any loss, claim, or damage resulting from products, delivery, or failure of delivery thereof, and the Pharmacy agrees to hold Core Rx Returns harmless for any such loss, claim, or damage.</p>
+              <p>Any Core Rx Returns on product returns must be resolved within twelve (12) months of original return (debit memo) date.</p>
 
-              <h2>5. Service Terms</h2>
-              <h3>5.1 Service Description</h3>
-              <p>CoreRx provides reverse distribution services including:</p>
-              <ul>
-                <li>Pharmaceutical returns processing</li>
-                <li>Credit recovery coordination with manufacturers and wholesalers</li>
-                <li>Proper disposal of non-returnable items</li>
-                <li>Regulatory compliance documentation</li>
-                <li>Customer support and account management</li>
-              </ul>
-
-              <h3>5.2 Fees and Payment</h3>
-              <p>Fees for services will be communicated separately and are not included in this agreement. All fees must be paid according to the terms established in your service agreement with CoreRx.</p>
-
-              <h3>5.3 Service Limitations</h3>
-              <p>CoreRx reserves the right to:</p>
-              <ul>
-                <li>Refuse service for products that do not meet return criteria</li>
-                <li>Suspend or terminate service for violations of these terms</li>
-                <li>Modify service offerings with reasonable notice</li>
-                <li>Require additional documentation for certain product categories</li>
-              </ul>
-
-              <h2>6. Confidentiality and Data Protection</h2>
-              <h3>6.1 Confidential Information</h3>
-              <p>Both parties agree to protect confidential information exchanged during the course of business. This includes business information, customer data, pricing, and proprietary processes.</p>
-
-              <h3>6.2 Data Security</h3>
-              <p>CoreRx implements reasonable security measures to protect your data. However, you acknowledge that no internet transmission is completely secure and use the portal at your own risk.</p>
-
-              <h2>7. Liability and Indemnification</h2>
-              <h3>7.1 Limitation of Liability</h3>
-              <p>To the maximum extent permitted by law, CoreRx shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Services.</p>
-
-              <h3>7.2 Indemnification</h3>
-              <p>You agree to indemnify, defend, and hold harmless CoreRx, its officers, directors, employees, and agents from any claims, damages, losses, or expenses arising from:</p>
-              <ul>
-                <li>Your violation of these Terms and Conditions</li>
-                <li>Your return of counterfeit, diverted, or non-authentic products</li>
-                <li>Your failure to comply with applicable laws and regulations</li>
-                <li>Any misrepresentation in your registration information</li>
-              </ul>
-
-              <h2>8. Termination</h2>
-              <h3>8.1 Termination by Customer</h3>
-              <p>You may terminate your use of the Services at any time by providing written notice to CoreRx.</p>
-
-              <h3>8.2 Termination by CoreRx</h3>
-              <p>CoreRx may suspend or terminate your access to the Services immediately if:</p>
-              <ul>
-                <li>You violate any provision of these Terms</li>
-                <li>Your licenses or registrations expire or are revoked</li>
-                <li>You provide false or misleading information</li>
-                <li>You return suspect or illegitimate products</li>
-                <li>CoreRx determines that continued service would create legal or regulatory risk</li>
-              </ul>
-
-              <h2>9. Governing Law and Dispute Resolution</h2>
-              <p>These Terms shall be governed by and construed in accordance with the laws of the State of New York, without regard to its conflict of law principles. Any disputes arising from these Terms shall be resolved through binding arbitration in Nassau County, New York.</p>
-
-              <h2>10. Changes to Terms</h2>
-              <p>CoreRx reserves the right to modify these Terms and Conditions at any time. Changes will be effective immediately upon posting to the website. Your continued use of the Services after changes constitutes acceptance of the modified terms.</p>
-
-              <h2>11. Contact Information</h2>
-              <p>For questions about these Terms and Conditions, please contact:</p>
-              <div className="highlight-box">
-                <strong>CoreRx Returns</strong><br />
-                225A Sunrise Hwy<br />
-                Lynbrook, NY 11563<br /><br />
-                <strong>Toll Free:</strong> 888-700-9896<br />
-                <strong>Fax:</strong> 1-800-498-9028<br />
-                <strong>Email:</strong> info@corerxreturns.com<br />
-                <strong>Website:</strong> corerxreturns.com
-              </div>
-
-              <h2>12. Entire Agreement</h2>
-              <p>These Terms and Conditions constitute the entire agreement between you and CoreRx regarding the Services and supersede all prior agreements and understandings.</p>
+              <h2>Disclaimer</h2>
+              <p>Core Rx Returns is not responsible for returns which are lost, damaged or not complaint with return procedures. Core Rx Returns reserves the right to make all final determinations. These terms and conditions may be modified by Core Rx Returns at its option, from time to time, upon written notice to customers.</p>
 
             </div>
           </div>

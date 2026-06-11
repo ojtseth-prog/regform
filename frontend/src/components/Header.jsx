@@ -37,11 +37,11 @@ const Header = ({ scrolled, isMenuOpen, setIsMenuOpen }) => {
           </button>
 
           <ul className={`nav-links ${isMenuOpen ? "active" : ""}`}>
-            <li onClick={() => window.location.hash = ""}>Home</li>
-            <li><a href="http://localhost:5173/">About Us</a></li>
-            <li><a href="http://localhost:5173/">Services</a></li>
-            <li><a href="http://localhost:5173/">Contact Us</a></li>
-            <li className="login-btn"><a href="http://localhost:5173/">Login</a></li>
+            <li><a href="https://corerxreturns.com/">Home</a></li>
+            <li><a href="https://corerxreturns.com/about-us">About Us</a></li>
+            <li><a href="https://corerxreturns.com/services">Services</a></li>
+            <li><a href="https://corerxreturns.com/contact-us">Contact Us</a></li>
+            <li className="login-btn"><a href="https://coremedsweeprx.impactprotech.host/">Login</a></li>
           </ul>
         </div>
       </nav>
