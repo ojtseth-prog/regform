@@ -185,10 +185,27 @@ function App() {
       return;
     }
 
-    if (!files.state_lic_file || !files.dea_lic_file) {
-      alert("Please upload both State and DEA licenses.");
-      return;
-    }
+if (!files.state_lic_file || !files.dea_lic_file) {
+    alert("Please upload both State and DEA licenses.");
+    return;
+}
+
+const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+const allowedExt = ["pdf", "jpg", "jpeg", "png"];
+
+const isValidFile = (file) => {
+    const ext = file.name.split(".").pop().toLowerCase();
+    return allowedTypes.includes(file.type) || allowedExt.includes(ext);
+};
+
+if (!isValidFile(files.state_lic_file)) {
+    alert("State License: Only PDF, JPEG, or PNG files are allowed.");
+    return;
+}
+if (!isValidFile(files.dea_lic_file)) {
+    alert("DEA License: Only PDF, JPEG, or PNG files are allowed.");
+    return;
+}
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.email_address)) {
@@ -196,39 +213,30 @@ function App() {
       return;
     }
 
-    setLoading(true);
-    setIsError(false);
-    setMessage("");
+ setLoading(true);
+setIsError(false);
+setMessage("");
 
-    const data = new FormData();
-    Object.keys(formData).forEach(key => {
-      data.append(key, formData[key] || "");
-    });
+const data = new FormData();
+Object.keys(formData).forEach(key => {
+    data.append(key, formData[key] || "");
+});
 
-    data.append("terms_accepted", termsAccepted ? "1" : "0");
+data.append("terms_accepted", termsAccepted ? "1" : "0");
 
-    // Change 2: Use getCanvas() instead of getTrimmedCanvas() to avoid the TypeError
-    // This gets the signature exactly as drawn on the pad
-    const signatureImage = sigPad.getCanvas().toDataURL('image/png');
-    data.append("signature_image", signatureImage);
+const signatureImage = sigPad.getCanvas().toDataURL('image/png');
+data.append("signature_image", signatureImage);
 
-    if (files.state_lic_file) data.append("state_lic_file", files.state_lic_file);
-    if (files.dea_lic_file) data.append("dea_lic_file", files.dea_lic_file);
+if (files.state_lic_file) data.append("state_lic_file", files.state_lic_file);
+if (files.dea_lic_file) data.append("dea_lic_file", files.dea_lic_file);
 
-    try {
-      const response = await axios.post("https://corerxinfo.impactprotech.host/api/register.php", data);
-      if (response.data && response.data.success) {
-        setCurrentView("success");
-      } else {
-        setIsError(true);
-        setMessage(response.data.error || "The server encountered an issue saving your data.");
-      }
-    } catch (error) {
-      setIsError(true);
-      setMessage(error.response?.data?.error || "Error connecting to server.");
-    } finally {
-      setLoading(false);
-    }
+// Optimistic — show success immediately, upload in background
+setCurrentView("success");
+setCountdown(3);
+setLoading(false);
+
+axios.post("https://corerxinfo.impactprotech.host/api/register.php", data)
+    .catch(error => console.error("Background submission error:", error));
   };
 
   const handleBackToHome = () => {
@@ -423,11 +431,11 @@ function App() {
                 <div className="form-row animate-in">
                   <div className="form-group half">
                     <label>State Lic. Copy *</label>
-                    <input type="file" name="state_lic_file" onChange={handleFileChange} className="file-input" required />
+                    <input type="file" name="state_lic_file" onChange={handleFileChange} className="file-input" required accept=".pdf,.jpg,.jpeg,.png" />
                   </div>
                   <div className="form-group half">
                     <label>DEA Lic. Copy *</label>
-                    <input type="file" name="dea_lic_file" onChange={handleFileChange} className="file-input" required />
+                    <input type="file" name="dea_lic_file" onChange={handleFileChange} className="file-input" required accept=".pdf,.jpg,.jpeg,.png"/>
                   </div>
                 </div>
 
